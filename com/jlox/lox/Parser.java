@@ -2,6 +2,8 @@ package com.jlox.lox;
 
 import java.util.List;
 
+// TODO: Add support for comma and ?:
+
 class Parser {
 
   private static class ParseError extends RuntimeException {
@@ -12,6 +14,14 @@ class Parser {
 
   Parser(List<Token> tokens) {
     this.tokens = tokens;
+  }
+
+  Expr parse() {
+    try {
+      return expression();
+    } catch (ParseError error) {
+      return null;
+    }
   }
 
   private Expr expression() {
@@ -87,6 +97,8 @@ class Parser {
       consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
       return new Expr.Grouping(expr);
     }
+
+    throw error(peek(), "Expect expression.");
   }
 
   private boolean match(TokenType... types) {
@@ -103,13 +115,13 @@ class Parser {
     if (check(type))
       return advance();
 
-    throw error(peak(), message);
+    throw error(peek(), message);
   }
 
   private boolean check(TokenType type) {
     if (isAtEnd())
       return false;
-    return peak().type == type;
+    return peek().type == type;
   }
 
   private Token advance() {
@@ -119,10 +131,10 @@ class Parser {
   }
 
   private boolean isAtEnd() {
-    return peak().type == TokenType.EOF;
+    return peek().type == TokenType.EOF;
   }
 
-  private Token peak() {
+  private Token peek() {
     return tokens.get(current);
   }
 
@@ -135,4 +147,26 @@ class Parser {
     return new ParseError();
   }
 
+  private void synchronize() {
+    advance();
+
+    while (!isAtEnd()) {
+      if (previous().type == TokenType.SEMICOLON)
+        return;
+
+      switch (peek().type) {
+        case TokenType.CLASS:
+        case TokenType.FUN:
+        case TokenType.VAR:
+        case TokenType.FOR:
+        case TokenType.IF:
+        case TokenType.WHILE:
+        case TokenType.PRINT:
+        case TokenType.RETURN:
+          return;
+      }
+
+      advance();
+    }
+  }
 }
