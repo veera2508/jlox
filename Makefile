@@ -3,7 +3,7 @@ SRC_DIR = src
 BIN_DIR = bin
 PACKAGE = com/jlox/lox
 TOOLS_PACKAGE = com/jlox/tool
-MAIN_CLASS = com.jlox.lox.Main
+MAIN_CLASS = com.jlox.lox.Lox
 GENERATE_AST_CLASS = com.jlox.tool.GenerateAst
 
 
