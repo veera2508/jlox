@@ -24,33 +24,33 @@ class Interpreter implements Expr.Visitor<Object> {
     Object right = evaluate(expr.right);
     try {
       switch (expr.operator.type) {
-        case TokenType.MINUS:
+        case MINUS:
           checkNumberOperand(expr.operator, left, right);
           return (double) left - (double) right;
-        case TokenType.STAR:
+        case STAR:
           checkNumberOperand(expr.operator, left, right);
           return (double) left * (double) right;
-        case TokenType.SLASH:
+        case SLASH:
           checkNumberOperand(expr.operator, left, right);
           checkDivByZero(expr.operator, right);
           return (double) left / (double) right;
-        case TokenType.GREATER:
+        case GREATER:
           checkNumberOperand(expr.operator, left, right);
           return (double) left > (double) right;
-        case TokenType.LESS:
+        case LESS:
           checkNumberOperand(expr.operator, left, right);
           return (double) left < (double) right;
-        case TokenType.GREATER_EQUAL:
+        case GREATER_EQUAL:
           checkNumberOperand(expr.operator, left, right);
           return (double) left >= (double) right;
-        case TokenType.LESS_EQUAL:
+        case LESS_EQUAL:
           checkNumberOperand(expr.operator, left, right);
           return (double) left <= (double) right;
-        case TokenType.EQUAL_EQUAL:
+        case EQUAL_EQUAL:
           return isEqual(left, right);
-        case TokenType.BANG_EQUAL:
+        case BANG_EQUAL:
           return !isEqual(left, right);
-        case TokenType.PLUS:
+        case PLUS:
           if (left instanceof Double && right instanceof Double)
             return (double) left + (double) right;
           else if (left instanceof String && right instanceof String)
@@ -78,9 +78,9 @@ class Interpreter implements Expr.Visitor<Object> {
   public Object visitUnaryExpr(Unary expr) {
     Object right = evaluate(expr.right);
     switch (expr.operator.type) {
-      case TokenType.BANG:
+      case BANG:
         return !isTruthy(right);
-      case TokenType.MINUS:
+      case MINUS:
         checkNumberOperand(expr.operator, right);
         return -(double) right;
     }
